@@ -1,5 +1,6 @@
 export interface IProductLists {
-    id:number | undefined;
+    // id:number | undefined;
+    id?: string;
     title:string;
     descreption:string;
     price:string;

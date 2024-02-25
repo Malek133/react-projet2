@@ -1,14 +1,25 @@
 
-import { useState } from 'react'
+import { useState,ChangeEvent } from 'react'
 import './App.css'
 import ProductCard from './components/ProductCard'
 import { DataListes,formInputsList } from './components/data/Data'
 import ModalD from './components/ui/ModalD'
 import Button from './components/ui/Button'
 import Input from './components/ui/Input'
-
+import {IProductLists} from './components/Interface'
 
 function App() {
+  const[product,setProduct] = useState<IProductLists>({
+    title: "",
+    descreption: "",
+    imageURL: "",
+    price: "",
+    colors:[],
+    categorys:{
+      name:'',
+        imageURL:''
+    }
+  })
    const [isOpen, setIsOpen] = useState(false)
 
   function closeModal() {
@@ -18,6 +29,21 @@ function App() {
   function openModal() {
     setIsOpen(true)
   }
+
+  const onChangeHandler = 
+  (e: ChangeEvent<HTMLInputElement>) => {
+    const { value, name } = e.target;
+
+    setProduct({
+      ...product,
+      [name]: value,
+    });
+    // setErrors({
+    //   ...errors,
+    //   [name]: "",
+    // });
+  };
+
  //Renders
  const RenderProductList = DataListes
  .map((product) =><ProductCard key={product.id} 
@@ -35,8 +61,8 @@ function App() {
     <Input type="text" id={input.id} 
     name={input.name}   
     className='border-2 border-gray-350'
-    // value={product[input.name]} 
-    // onChange={onChangeHandler} 
+     value={''} 
+    onChange={onChangeHandler} 
     />
     {/* <ErrorMessage msg={errors[input.name]} /> */}
   </div>
