@@ -61,7 +61,7 @@ function App() {
     <Input type="text" id={input.id} 
     name={input.name}   
     className='border-2 border-gray-350'
-     value={''} 
+     value={product[input.name]} 
     onChange={onChangeHandler} 
     />
     {/* <ErrorMessage msg={errors[input.name]} /> */}
