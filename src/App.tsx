@@ -1,5 +1,5 @@
 
-import { useState,ChangeEvent } from 'react'
+import { useState,ChangeEvent,FormEvent } from 'react'
 import './App.css'
 import ProductCard from './components/ProductCard'
 import { DataListes,formInputsList } from './components/data/Data'
@@ -7,19 +7,27 @@ import ModalD from './components/ui/ModalD'
 import Button from './components/ui/Button'
 import Input from './components/ui/Input'
 import {IProductLists} from './components/Interface'
+import { productValidation } from './validation/Validation'
+import ErrorMessage from './components/ErrorMessage'
 
 function App() {
-  const[product,setProduct] = useState<IProductLists>({
+
+  const [errors, setErrors] = 
+  useState({ title: "", descreption: "", imageURL: "", price: "" });
+  
+  const deftProductObj: IProductLists = {
     title: "",
     descreption: "",
     imageURL: "",
     price: "",
-    colors:[],
-    categorys:{
-      name:'',
-        imageURL:''
-    }
-  })
+    colors: [],
+    categorys: {
+      name: "",
+      imageURL: "",
+    },
+  };
+  const[product,setProduct] = 
+  useState<IProductLists>(deftProductObj)
    const [isOpen, setIsOpen] = useState(false)
 
   function closeModal() {
@@ -30,6 +38,12 @@ function App() {
     setIsOpen(true)
   }
 
+  const onCancel = () => {
+    closeModal()
+    // setIsOpen(false)
+    setProduct(deftProductObj)
+  };
+
   const onChangeHandler = 
   (e: ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
@@ -38,11 +52,35 @@ function App() {
       ...product,
       [name]: value,
     });
-    // setErrors({
-    //   ...errors,
-    //   [name]: "",
-    // });
+    setErrors({
+      ...errors,
+      [name]: "",
+    });
   };
+
+  const submitHandler = (e: 
+    FormEvent<HTMLFormElement>): void => {
+    e.preventDefault();
+    const { title, descreption,
+       price, imageURL } = product;
+
+    const errors = productValidation({
+      title, descreption,
+      price, imageURL,
+    });
+    console.log(product)
+
+    const hasErrorMsg =
+    Object.values(errors).some(value => value === "") && 
+    Object.values(errors).every(value => value === "");
+    
+
+  if (!hasErrorMsg) {
+    setErrors(errors);
+    return;
+  }
+
+  }
 
  //Renders
  const RenderProductList = DataListes
@@ -64,7 +102,7 @@ function App() {
      value={product[input.name]} 
     onChange={onChangeHandler} 
     />
-    {/* <ErrorMessage msg={errors[input.name]} /> */}
+     <ErrorMessage msg={errors[input.name]} /> 
   </div>
     ));
 
@@ -80,15 +118,17 @@ function App() {
         
         <ModalD isOpen={isOpen} closeModal={closeModal} 
         title='add new product'>
-          <form>
+          <form onSubmit={submitHandler}>
             <div className='m-5 flex flex-col space-y-4'>
               {renderFormInputList}
               </div>
           <div className='flex items-center justify-center space-x-5'>
             
-          <Button className="bg-rose-900 hover:bg-rose-800">
+          <Button onClick={onCancel}
+          className="bg-rose-900 hover:bg-rose-800">
             Cancel</Button>
-          <Button className="bg-indigo-950 hover:bg-indigo-800">
+          <Button 
+          className="bg-indigo-950 hover:bg-indigo-800">
             Submit</Button> 
             </div>
           </form>

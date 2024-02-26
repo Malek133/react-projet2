@@ -110,7 +110,7 @@ export const formInputsList: IFormInput[] = [
   },
   {
     id: "description",
-    name: "description",
+    name: "descreption",
     label: "Product Description",
     type: "text",
   },
