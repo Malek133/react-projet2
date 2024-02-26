@@ -3,12 +3,19 @@ import { IProductLists } from "./Interface";
 import Button from "./ui/Button"
 import { Trash2 , FilePenLine } from 'lucide-react';
 import {textslice} from './Fuctions'
+import CircleColors from "./CircelColors";
 interface IProps{
     product:IProductLists
 }
 
 const ProductCard = ({product}:IProps) => {
-    const {title,descreption,price,imageURL,categorys} = product
+    const {title,descreption,price,imageURL,categorys,colors} = product;
+
+    // const RenderProductColor= colors.map(color => 
+    //     <CircleColors key={color} color={color}  />)
+    const RenderProductColor = colors.map(color => 
+    <CircleColors key={color} color={color} />);
+
   return (
     <div className=" max-w-sm md:max-w-lg border-2 border-gray-250 text-center 
     px-4 py-3 mt-6 rounded-lg d-flex 
@@ -24,10 +31,14 @@ const ProductCard = ({product}:IProps) => {
     <p className="text-gray-500 mt-2">
         {textslice(descreption)} </p>
 
+     
     <div className="flex gap-2 items-center">
-    <div className="h-5 w-5  rounded-full bg-slate-500" />
+              <div className='flex justify-start items-center space-x-1'>
+                {RenderProductColor}
+                </div>
+    {/* <div className="h-5 w-5  rounded-full bg-slate-500" />
     <div className="w-5 h-5 rounded-full bg-red-500" />
-    <div className="w-5 h-5 rounded-full bg-emerald-700" />
+    <div className="w-5 h-5 rounded-full bg-emerald-700" /> */}
     </div>
 
     <div className="flex justify-between items-center m-3 gap-2">
