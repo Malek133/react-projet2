@@ -6,15 +6,22 @@ import {textslice} from './Fuctions'
 import CircleColors from "./CircelColors";
 interface IProps{
     product:IProductLists
+    setProductToEdit:(product:IProductLists)=>void,
+    openEditModal:()=> void,
 }
 
-const ProductCard = ({product}:IProps) => {
+const ProductCard = ({product,setProductToEdit,openEditModal}:IProps) => {
     const {title,descreption,price,imageURL,categorys,colors} = product;
 
-    // const RenderProductColor= colors.map(color => 
-    //     <CircleColors key={color} color={color}  />)
     const RenderProductColor = colors.map(color => 
     <CircleColors key={color} color={color} />);
+
+    //*** Handler ***//
+
+    const onEdit = ()=>{
+      setProductToEdit(product)
+      openEditModal()
+    }
 
   return (
     <div className=" max-w-sm md:max-w-lg border-2 border-gray-250 text-center 
@@ -49,7 +56,7 @@ const ProductCard = ({product}:IProps) => {
     </div>
 
     <div className="flex justify-around items-center space-x-2 mt-6">
-        <Button  onClick={()=> console.log('clicked')} 
+        <Button  onClick={onEdit} 
         className="bg-blue-600"><FilePenLine /></Button>
         <Button className="bg-red-600"><Trash2 /></Button>
     </div>
