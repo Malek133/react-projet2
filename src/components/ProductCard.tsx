@@ -8,10 +8,14 @@ interface IProps{
     product:IProductLists
     setProductToEdit:(product:IProductLists)=>void,
     openEditModal:()=> void,
+    setProductToEditIdx: (value:number) => void;
+    idx:number
 }
 
-const ProductCard = ({product,setProductToEdit,openEditModal}:IProps) => {
-    const {title,descreption,price,imageURL,categorys,colors} = product;
+const ProductCard = ({product,setProductToEdit,
+  openEditModal,setProductToEditIdx,idx}:IProps) => {
+    const {title,descreption,price,imageURL,
+      categorys,colors} = product;
 
     const RenderProductColor = colors.map(color => 
     <CircleColors key={color} color={color} />);
@@ -21,6 +25,7 @@ const ProductCard = ({product,setProductToEdit,openEditModal}:IProps) => {
     const onEdit = ()=>{
       setProductToEdit(product)
       openEditModal()
+      setProductToEditIdx(idx)
     }
 
   return (
@@ -50,9 +55,12 @@ const ProductCard = ({product,setProductToEdit,openEditModal}:IProps) => {
 
     <div className="flex justify-between items-center m-3 gap-2">
         <span className="text-xl">{price} $</span>
-
-        <img className="w-11 h-11 rounded-full" 
+         <div className="flex justify-center items-center gap-3">
+          {categorys.name}
+          <img className="w-11 h-11 rounded-full" 
         src={categorys.imageURL} alt={categorys.name} />
+          </div>
+        
     </div>
 
     <div className="flex justify-around items-center space-x-2 mt-6">

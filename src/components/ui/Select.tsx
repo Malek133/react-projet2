@@ -15,11 +15,6 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
 }
 
-
-// function classNames(...classes: string[]) {
-//   return classes.filter(Boolean).join(' ')
-// }
-
  const  Select= ({selected, setSelected}:IProps) => {
    
 

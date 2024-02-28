@@ -31,13 +31,14 @@ function App() {
     },
   };
   const [products, setProducts] = useState<IProductLists[]>(DataListes);
-  const[product,setProduct] = useState<IProductLists>(deftProductObj)
+  const[product,setProduct] = useState<IProductLists>(deftProductObj);
    const [isOpen, setIsOpen] = useState(false);
    const [isOpenEditModal, setIsOpenEditModal] = useState(false);
    const [productToEdit, setProductToEdit] = useState<IProductLists>(deftProductObj);
+   const [productToEditIdx, setProductToEditIdx] = useState<number>(0);
    const [tempColors, setTempColor] = useState<string[]>([]);
    const [selectedCategory, setSelectedCategory] = useState(categories[0]);
-   console.log("product to edit",productToEdit)
+  
 
   function closeModal() {setIsOpen(false)}
   function openModal() { setIsOpen(true)}
@@ -47,7 +48,6 @@ function App() {
 
   const onCancel = () => {
     closeModal()
-    // setIsOpen(false)
     setProduct(deftProductObj)
   };
 
@@ -125,18 +125,25 @@ function App() {
     setErrors(errors);
     return;
   }
-  // setProducts(prev => [{ ...product, id: uuid(), 
-  //   colors: tempColors,categorys:selectedCategory}, ...prev]);
+  
+  const updateProducts=[...products,];
+  updateProducts[productToEditIdx]= {...productToEdit,
+    colors: tempColors.concat(productToEdit.colors)};
+  setProducts(updateProducts)
     setProductToEdit(deftProductObj)
     setTempColor([])
-    closeModal();
+    closeEditModal();
   }
   // EDIT PRODUCT
 
  //Renders
- const RenderProductList = products.map((product) =>
- <ProductCard key={product.id} openEditModal={openEditModal}
- product={product} setProductToEdit={setProductToEdit} /> );
+ const RenderProductList = products.map((product,idx) =>(
+ 
+ <ProductCard key={product.id} product={product}
+ openEditModal={openEditModal}  idx={idx}
+ setProductToEdit={setProductToEdit} 
+ setProductToEditIdx={setProductToEditIdx}  />
+  ));
 
 // inputs 
  const renderFormInputList = formInputsList.map((input) => (
@@ -163,6 +170,10 @@ function App() {
           setTempColor(prev => prev.filter(item => item !== color));
           return;
         }
+        if (productToEdit.colors.includes(color)) {
+          setTempColor(prev => prev.filter(item => item !== color));
+          return;
+        }
         setTempColor((prev)=> [...prev,color] )}} 
         />)
 
@@ -172,7 +183,7 @@ function App() {
           <div className="flex flex-col">
           <label htmlFor={id} 
               className="mb-[2px] text-sm font-medium text-gray-700">
-         {/* {input.label} */}
+         
          {label}
          </label>
           <Input type="text" id={id} name={name}   
@@ -185,12 +196,17 @@ function App() {
 
   return (
     <main className='container mx-auto'>
-
+       <div className='flex justify-between items-center'>
+        <span></span>
       <Button onClick={openModal} 
-      className="bg-indigo-950 hover:bg-indigo-800 mt-5">
-            Add + </Button> 
+      className="bg-indigo-950 hover:bg-indigo-800 
+      w-fit  mt-5"> Add new product </Button> 
+            <span></span>
+            
+       </div>
+      
 
-       <div className='fles justify-between items-center gap-4 p-8 '>
+       <div className='flex justify-between items-center gap-4 p-8 '>
         {/* add model  */}
         <ModalD isOpen={isOpen} closeModal={closeModal} 
         title='add new product'>
@@ -235,17 +251,30 @@ function App() {
             <div className='m-5 flex flex-col space-y-4'>
               {/* {renderProductEditWithErrorMsg()} */}
     {renderProductEditWithErrorMsg("title", "Product Title", "title")}
-  {renderProductEditWithErrorMsg("descreption", "Product Description", "descreption")}
+{renderProductEditWithErrorMsg("descreption", "Product Description", "descreption")}
  {renderProductEditWithErrorMsg("imageURL", "Product Image URL", "imageURL")}
   {renderProductEditWithErrorMsg("price", "Product Price", "price")}
               {/* {renderFormInputList} */}
         
-              {/* <Select selected={selectedCategory} 
-              setSelected={setSelectedCategory} /> */}
+        <Select selected={productToEdit.categorys} 
+    setSelected={(value) => setProductToEdit({...productToEdit,categorys:value})} />
 
-              {/* <div className='flex justify-start items-center space-x-1'>
+              <div className='flex justify-start items-center space-x-1'>
                 {RenderProductColor}
-                </div> */}
+                </div>
+
+          <div className="flex items-center flex-wrap space-x-1">
+            {tempColors.concat(productToEdit.colors).map(color => (
+              <span
+                key={color}
+                className="p-1 mr-1 mb-1 text-xs rounded-md text-white"
+                style={{ backgroundColor: color }}
+              >
+                {color}
+              </span>
+            ))}
+          </div>
+
 
                 {/* <div className='flex flex-wrap justify-start items-center 
                 space-x-1'>
@@ -261,7 +290,7 @@ function App() {
           <div className='flex items-center justify-center space-x-5'>
             
           <Button onClick={onCancel}
-          className="bg-rose-900 hover:bg-rose-800">
+          className="bg-rose-400 hover:bg-rose-300 text-black">
             Cancel</Button>
           <Button 
           className="bg-indigo-950 hover:bg-indigo-800">
@@ -272,7 +301,7 @@ function App() {
         {/* edit model */}
         </div> 
     <div className='p-4 m-5 rounded-2xl
-    grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 
+    grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 
     md:gap-6'>
       
     {RenderProductList}
