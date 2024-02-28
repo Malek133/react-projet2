@@ -13,6 +13,7 @@ import ErrorMessage from './components/ErrorMessage'
 import CircleColors from './components/CircelColors'
   import Select from './components/ui/Select';
   import {ProductNameTypes} from './components/types'
+  import toast, { Toaster } from 'react-hot-toast';
 
 function App() {
 
@@ -38,6 +39,7 @@ function App() {
    const [productToEditIdx, setProductToEditIdx] = useState<number>(0);
    const [tempColors, setTempColor] = useState<string[]>([]);
    const [selectedCategory, setSelectedCategory] = useState(categories[0]);
+   const [isOpenConfirmModal, setIsOpenConfirmModal] = useState(false);
   
 
   function closeModal() {setIsOpen(false)}
@@ -46,10 +48,27 @@ function App() {
   function closeEditModal() {setIsOpenEditModal(false)}
   function openEditModal() { setIsOpenEditModal(true)}
 
+  const closeConfirmModal = () => setIsOpenConfirmModal(false);
+  const openConfirmModal = () => setIsOpenConfirmModal(true);
+
   const onCancel = () => {
     closeModal()
     setProduct(deftProductObj)
   };
+
+  const removeProductHandler = ()=>{
+    const filtered = products.filter(product => product.id !== productToEdit.id);
+     setProducts(filtered)
+    // setProductToEdit(product)
+    closeConfirmModal();
+    toast("Product has been deleted successfully!", {
+      icon: "👏",
+      style: {
+        backgroundColor: "#dc7d7d",
+        color: "white",
+      },
+    });
+  }
 
   const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
@@ -142,7 +161,8 @@ function App() {
  <ProductCard key={product.id} product={product}
  openEditModal={openEditModal}  idx={idx}
  setProductToEdit={setProductToEdit} 
- setProductToEditIdx={setProductToEditIdx}  />
+ setProductToEditIdx={setProductToEditIdx}
+ openConfirmModal={openConfirmModal}  />
   ));
 
 // inputs 
@@ -244,6 +264,8 @@ function App() {
         </ModalD>
         {/* add model  */}
 
+  
+
         {/* edit model */}
         <ModalD isOpen={isOpenEditModal} closeModal={closeEditModal} 
         title='Edit product'>
@@ -299,15 +321,35 @@ function App() {
           </form>
         </ModalD>
         {/* edit model */}
+
+        {/* DELETE PRODUCT CONFIRM MODAL */}
+      <ModalD
+        isOpen={isOpenConfirmModal}
+        closeModal={closeConfirmModal}
+     title="Are you sure you want to remove this Product from your Store?"
+      >
+        <div className="flex items-center space-x-3">
+          <Button className="bg-[#c2344d] hover:bg-red-800" 
+          onClick={removeProductHandler}>
+            Yes, remove
+          </Button>
+          <Button type="button" 
+          className="bg-[#f5f5fa] hover:bg-gray-300 !text-black" 
+          onClick={closeConfirmModal}>
+            Cancel
+          </Button>
+        </div>
+      </ModalD>
+       {/* DELETE PRODUCT CONFIRM MODAL */}
+
         </div> 
-    <div className='p-4 m-5 rounded-2xl
-    grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 
-    md:gap-6'>
+           <div className='p-4 m-5 rounded-2xl
+         grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-6'>
       
     {RenderProductList}
     </div>
    
-
+     <Toaster />
     </main>
   )
 }

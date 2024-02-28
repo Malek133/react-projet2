@@ -9,11 +9,12 @@ interface IProps{
     setProductToEdit:(product:IProductLists)=>void,
     openEditModal:()=> void,
     setProductToEditIdx: (value:number) => void;
-    idx:number
+    idx:number;
+    openConfirmModal: () => void;
 }
 
 const ProductCard = ({product,setProductToEdit,
-  openEditModal,setProductToEditIdx,idx}:IProps) => {
+  openEditModal,setProductToEditIdx,idx,openConfirmModal}:IProps) => {
     const {title,descreption,price,imageURL,
       categorys,colors} = product;
 
@@ -27,6 +28,11 @@ const ProductCard = ({product,setProductToEdit,
       openEditModal()
       setProductToEditIdx(idx)
     }
+
+    const onRemove = () => {
+       setProductToEdit(product);
+      openConfirmModal();
+    };
 
   return (
     <div className=" max-w-sm md:max-w-lg border-2 border-gray-250 text-center 
@@ -65,8 +71,13 @@ const ProductCard = ({product,setProductToEdit,
 
     <div className="flex justify-around items-center space-x-2 mt-6">
         <Button  onClick={onEdit} 
-        className="bg-blue-600"><FilePenLine /></Button>
-        <Button className="bg-red-600"><Trash2 /></Button>
+        className="bg-blue-600"><FilePenLine />
+        </Button>
+
+        <Button onClick={onRemove} 
+        className="bg-red-600"><Trash2 />
+        </Button>
+
     </div>
 
     </div>
