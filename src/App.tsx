@@ -94,6 +94,7 @@ function App() {
       ...errors,
       [name]: "",
     });
+    
   };
   // ADD NEW  PRODUCT HANDLER
   const submitHandler = (e: 
@@ -106,7 +107,6 @@ function App() {
       title, descreption,
       price, imageURL,
     });
-    // console.log(product)
 
     const hasErrorMsg =
     Object.values(errors).some(value => value === "") && 
@@ -121,7 +121,14 @@ function App() {
     colors: tempColors,categorys:selectedCategory}, ...prev]);
     setProduct(deftProductObj)
     setTempColor([])
-    closeModal()
+    closeModal();
+    toast("Product has been created successfully!", {
+      icon: "🔥",
+      style: {
+        backgroundColor: "#219735",
+        color: "white",
+      },
+    });
   // setProducts(prev =>[...prev,{...product,id:uuid(),colors:setTempColor}])
   }
   // ADD NEW PRODUCT HANDLER
@@ -152,6 +159,13 @@ function App() {
     setProductToEdit(deftProductObj)
     setTempColor([])
     closeEditModal();
+    toast("Product has been updated successfully!", {
+      icon: "🔥",
+      style: {
+        backgroundColor: "#6265b4",
+        color: "white",
+      },
+    });
   }
   // EDIT PRODUCT
 
@@ -219,7 +233,7 @@ function App() {
        <div className='flex justify-between items-center'>
         <span></span>
       <Button onClick={openModal} 
-      className="bg-indigo-950 hover:bg-indigo-800 
+      className="bg-green-700 hover:bg-green-500 
       w-fit  mt-5"> Add new product </Button> 
             <span></span>
             
@@ -257,7 +271,7 @@ function App() {
           className="bg-rose-900 hover:bg-rose-800">
             Cancel</Button>
           <Button 
-          className="bg-indigo-950 hover:bg-indigo-800">
+          className="bg-green-700 hover:bg-green-500">
             Submit</Button> 
             </div>
           </form>
@@ -271,12 +285,12 @@ function App() {
         title='Edit product'>
           <form onSubmit={submitEditHandler}>
             <div className='m-5 flex flex-col space-y-4'>
-              {/* {renderProductEditWithErrorMsg()} */}
+             
     {renderProductEditWithErrorMsg("title", "Product Title", "title")}
 {renderProductEditWithErrorMsg("descreption", "Product Description", "descreption")}
  {renderProductEditWithErrorMsg("imageURL", "Product Image URL", "imageURL")}
   {renderProductEditWithErrorMsg("price", "Product Price", "price")}
-              {/* {renderFormInputList} */}
+              
         
         <Select selected={productToEdit.categorys} 
     setSelected={(value) => setProductToEdit({...productToEdit,categorys:value})} />
@@ -296,18 +310,7 @@ function App() {
               </span>
             ))}
           </div>
-
-
-                {/* <div className='flex flex-wrap justify-start items-center 
-                space-x-1'>
-                {tempColors.map(color =>
-                <span key={color} color={color} 
-                className='text-white p-1 m-1 rounded-md text-xs'
-                style={{ backgroundColor: color }}>
-                  {color}</span>)}
-                </div> */}
                    
-
               </div>
           <div className='flex items-center justify-center space-x-5'>
             
